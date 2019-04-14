@@ -1,9 +1,6 @@
 import os
-import pycuda.autoinit
-import pycuda.driver as cuda
 import tensorrt as trt
 import torch
-import time
 
 class Engine:
     """
@@ -22,7 +19,7 @@ class Engine:
         self.array_out_shape = self.engine.get_binding_shape(1)
         
         self.batch_size = self.engine.max_batch_size
-        self.time_list = []
+
         
     def run(self,data:torch.Tensor)->torch.Tensor:
         """
@@ -40,10 +37,7 @@ class Engine:
     def _compute(self,data_in_index:int,data_out_index:int,batch_size:int = 1):
         if not hasattr(self,'context'):
             self.context = self.engine.create_execution_context()
-        t0=time.time()
         self.context.execute(batch_size,[data_in_index,data_out_index])
-        t1=time.time()
-        self.time_list.append([t1-t0])
     
     def __str__(self):
         info = f"tensorrt engine \ninput  -> shape:{self.array_in_shape}\tdtype:{self.array_in_dtype}"+\
@@ -62,4 +56,3 @@ if __name__ == '__main__':
     print(engine)
     for i in tqdm(range(100)):
         result = engine.run(image)
-    print(torch.Tensor(engine.time_list).sum(dim=0))
