@@ -25,7 +25,7 @@ class Engine:
         """
         data should be as batch.such as 128x3x32x32
         """
-        data_out = torch.zeros_like(data,device=data.device,dtype=data.dtype)
+        data_out = torch.empty_like(data,device=data.device,dtype=data.dtype)
         i = 0
         r = data.shape[0]
         assert(r % self.batch_size == 0)

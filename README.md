@@ -1,2 +1,3 @@
 # onnx_to_tensort
-onnx to tensorrt fot jetson xavier
+onnx to tensorrt for jetson xavier
+use for pytorch
